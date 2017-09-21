@@ -1,0 +1,12 @@
+ul.pagination li.active span{
+        background-color: #dd4b39 !important;
+    border-color: #d73925 !important;
+}
+ul.list-step{
+    list-style: none;
+    padding: 0px;
+}
+ul.list-step li{
+    float: left ; 
+    padding-right: 20px;
+}

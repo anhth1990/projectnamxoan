@@ -3,7 +3,11 @@
     <type>org.netbeans.modules.php.project</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/php-project/1">
-            <name>project_2</name>
+            <name>project_namxoan</name>
         </data>
+        <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>endforeach</word>
+            <word>Yupax</word>
+        </spellchecker-wordlist>
     </configuration>
 </project>

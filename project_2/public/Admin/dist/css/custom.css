@@ -1,0 +1,14 @@
+.alert-custom{
+    border-radius: 4px;
+    background-color: #f2dede;
+    border-color: #ebccd1;
+}
+
+.alert-custom p {
+    padding: 15px;
+    color: #a94442;
+}
+
+.form-group label{
+    width: 100% !important
+}
