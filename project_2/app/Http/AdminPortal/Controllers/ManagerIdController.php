@@ -35,9 +35,9 @@ class ManagerIdController extends BaseController {
     public function getData() {
         DB::beginTransaction();
         try {
-            $strData =  $this->apiService->getData();
+            //$strData =  $this->apiService->getData();
             //$strData = "12345vsec|0*2017-06-28 14:57:10*c:\abc\d\f*md5|0*2017-06-28 14:57:10*c:\abc\d\f";
-            //$strData = "12349vsec|";
+            $strData = "12349vsec|";
             if ($strData != null && $strData != "") {
                 $arrData = explode("|", $strData);
                 if (isset($arrData[0]) && $arrData[0] != null) {

@@ -84,7 +84,7 @@
                                     <td>
                                         @if($objDetail->type == 0)
                                             <span class="badge bg-blue">An toàn</span>
-                                          @elseif($obj->status == 1)
+                                          @elseif($objDetail->type == 1)
                                             <span class="badge bg-red">Nguy hiểm</span>
                                           @endif
                                         
