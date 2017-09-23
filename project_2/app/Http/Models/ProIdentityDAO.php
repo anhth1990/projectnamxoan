@@ -37,8 +37,14 @@ class ProIdentityDAO extends BaseDAO {
             if($searchForm->getStatus()!=null){
                 $data = $data->where('status', $searchForm->getStatus());
             }
+            
             $data = $data->where('status','!=', env('COMMON_STATUS_DELETED'));
-            $data = $data->orderBy('id', 'desc');
+            if($searchForm->getOrderName()!=null){
+                $data = $data->orderBy('name', 'asc');
+            }else{
+                $data = $data->orderBy('id', 'desc');
+            }
+            
             if($searchForm->getPageSize()!=null)
                 $data = $data->paginate($searchForm->getPageSize(), ['*'], 'page', $searchForm->getPageIndex());
             else

@@ -35,6 +35,11 @@
             <i class="fa fa-ambulance"></i> <span>{{trans('portal/common.manager')}}</span> <!-- <i class="fa fa-angle-left pull-right"></i> -->
           </a>
         </li>
+        <li class="<?php if($nav==4)echo'active'; ?>">
+          <a href="{{Asset('/'.env('PREFIX_ADMIN_PORTAL').'/user-admin')}}">
+            <i class="fa fa-user"></i> <span>{{trans('portal/common.user_admin')}}</span> <!-- <i class="fa fa-angle-left pull-right"></i> -->
+          </a>
+        </li>
         <!--
         <li class="<?php if($nav==2)echo'active'; ?> treeview">
             <a href="#">

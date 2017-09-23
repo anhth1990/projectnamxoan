@@ -30,6 +30,21 @@ Route::group(array('prefix' => 'portal', 'before' => 'check-login-admin-portal')
     Route::get('/manager-id/edit/{hashcode}', '\App\Http\AdminPortal\Controllers\ManagerIdController@getEdit');
     Route::post('/manager-id/edit', '\App\Http\AdminPortal\Controllers\ManagerIdController@postEdit');
     Route::get('/manager-id/deleteSearch', '\App\Http\AdminPortal\Controllers\ManagerIdController@getClearSearch');
+    
+    // User Admin
+    Route::get('/user-admin', '\App\Http\AdminPortal\Controllers\UserAdminController@getList');
+    Route::post('/user-admin', '\App\Http\AdminPortal\Controllers\UserAdminController@postList');
+    Route::get('/user-admin/deleteSearch', '\App\Http\AdminPortal\Controllers\UserAdminController@getClearSearch');
+    Route::get('/user-admin/add', '\App\Http\AdminPortal\Controllers\UserAdminController@getAdd');
+    Route::post('/user-admin/add-confirm', '\App\Http\AdminPortal\Controllers\UserAdminController@postAddConfirm');
+    Route::get('/user-admin/add-finish', '\App\Http\AdminPortal\Controllers\UserAdminController@getAddFinish');
+    Route::get('/user-admin/edit/{hashcode}', '\App\Http\AdminPortal\Controllers\UserAdminController@getEdit');
+    Route::post('/user-admin/edit-confirm', '\App\Http\AdminPortal\Controllers\UserAdminController@postEditConfirm');
+    Route::get('/user-admin/edit-finish', '\App\Http\AdminPortal\Controllers\UserAdminController@getEditFinish');
+    Route::get('/user-admin/change-password', '\App\Http\AdminPortal\Controllers\UserAdminController@getChangePassword');
+    Route::post('/user-admin/change-password', '\App\Http\AdminPortal\Controllers\UserAdminController@postChangePassword');
+    
+    //Route::get('/user-admin/add-finish', '\App\Http\AdminPortal\Controllers\ManagerIdController@getClearSearch');
 });
 /*
  * FrontEnd
@@ -47,7 +62,9 @@ Route::post('stripe/api/auth-merchant', '\App\Http\Api\Controllers\ApiController
 Route::post('stripe/api/unauth', '\App\Http\Api\Controllers\ApiController@postUnauth');
 Route::post('stripe/api/service', '\App\Http\Api\Controllers\ApiController@postService');
 Route::post('stripe/api/manager-id', '\App\Http\AdminPortal\Controllers\ManagerIdController@getData');
+Route::post('stripe/manager-id/get-data', '\App\Http\AdminPortal\Controllers\ManagerIdController@getDataList');
 Route::post('stripe/manager-id/delete', '\App\Http\AdminPortal\Controllers\ManagerIdController@postDelete');
+Route::post('stripe/user-admin/refresh-password', '\App\Http\AdminPortal\Controllers\UserAdminController@postRefreshPassword');
 
 
 

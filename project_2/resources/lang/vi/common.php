@@ -94,5 +94,7 @@ return [
     
     "answer_question_type_RATE"=>"Khảo sát",
     
+    
+    
 ];
 ?>

@@ -37,5 +37,6 @@ return [
     "MERCHANT_HAVE_NOT_USER"=>"NGƯỜI DÙNG CHƯA CÓ TẠI ĐƠN VỊ THÀNH VIÊN",
     "PASSWORD_OLD_REQUIRED"=>"MẬT KHẨU HIỆN TẠI LÀ BẮT BUỘC",
     "PASSWORD_OLD_WRONG"=>"MẬT KHẨU CŨ KHÔNG ĐÚNG",
-    "DATA_NOT_FOUND"=>"DỮ LIỆU KHÔNG ĐƯỢC TÌM THẤY"
+    "DATA_NOT_FOUND"=>"DỮ LIỆU KHÔNG ĐƯỢC TÌM THẤY",
+    "PERMISSION_DENIED"=>"KHÔNG CÓ QUYỀN",
 ];

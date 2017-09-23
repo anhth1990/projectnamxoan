@@ -35,9 +35,9 @@ class ManagerIdController extends BaseController {
     public function getData() {
         DB::beginTransaction();
         try {
-            //$strData =  $this->apiService->getData();
+            $strData =  $this->apiService->getData();
             //$strData = "12345vsec|0*2017-06-28 14:57:10*c:\abc\d\f*md5|0*2017-06-28 14:57:10*c:\abc\d\f";
-            $strData = "12349vsec|";
+            //$strData = "12349vsec|";
             if ($strData != null && $strData != "") {
                 $arrData = explode("|", $strData);
                 if (isset($arrData[0]) && $arrData[0] != null) {
@@ -50,7 +50,7 @@ class ManagerIdController extends BaseController {
                         //$identityForm->setUpdatedAt(time());
                         $identityForm->setLastLogin(date("Y-m-d H:i:s"));
                         $identityObj = $this->identityService->insert($identityForm);
-                    }else{
+                    } else {
                         //TH đã tồn tại ID
                         $identityForm->setId($identityObj->id);
                         $identityForm->setLastLogin(date("Y-m-d H:i:s"));
@@ -64,19 +64,19 @@ class ManagerIdController extends BaseController {
                                 ${'arrData_' . $i} = explode('*', $arrData[$i]);
                                 $indentityDetailForm = new ProIdentityDetailForm();
                                 $indentityDetailForm->setIndentityId($objId);
-                                if (isset(${'arrData_' . $i}[0]) && ${'arrData_' . $i}[0]!="") {
+                                if (isset(${'arrData_' . $i}[0]) && ${'arrData_' . $i}[0] != "") {
                                     $indentityDetailForm->setType(${'arrData_' . $i}[0]);
                                 }
-                                if (isset(${'arrData_' . $i}[1]) && ${'arrData_' . $i}[1]!="") {
+                                if (isset(${'arrData_' . $i}[1]) && ${'arrData_' . $i}[1] != "") {
                                     $indentityDetailForm->setTime(${'arrData_' . $i}[1]);
                                 }
-                                if (isset(${'arrData_' . $i}[2]) && ${'arrData_' . $i}[2]!="") {
+                                if (isset(${'arrData_' . $i}[2]) && ${'arrData_' . $i}[2] != "") {
                                     $indentityDetailForm->setUrl(${'arrData_' . $i}[2]);
                                 }
-                                if (isset(${'arrData_' . $i}[3]) && ${'arrData_' . $i}[3]!="") {
+                                if (isset(${'arrData_' . $i}[3]) && ${'arrData_' . $i}[3] != "") {
                                     $indentityDetailForm->setCode(${'arrData_' . $i}[3]);
                                 }
-                                if ($indentityDetailForm->getType()!=null || $indentityDetailForm->getTime()!=null || $indentityDetailForm->getUrl()!=null || $indentityDetailForm->getCode()!=null) {
+                                if ($indentityDetailForm->getType() != null || $indentityDetailForm->getTime() != null || $indentityDetailForm->getUrl() != null || $indentityDetailForm->getCode() != null) {
                                     $this->identityDetailService->insert($indentityDetailForm);
                                 }
                             }
@@ -111,9 +111,9 @@ class ManagerIdController extends BaseController {
                     $page = 1;
             }
             $searchForm->setPageSize(env('PAGE_SIZE'));
-            $listObj = $this->identityService->searchListData($searchForm);
-            $countObj = $this->identityService->countList($searchForm);
-            return view('AdminPortal.ManagerId.list', compact('listObj', 'countObj', 'searchForm', 'page'));
+            //$listObj = $this->identityService->searchListData($searchForm);
+            //$countObj = $this->identityService->countList($searchForm);
+            return view('AdminPortal.ManagerId.list', compact('searchForm', 'page'));
         } catch (Exception $ex) {
             $this->logs_custom("\nController ****\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
             $error = $ex->getMessage();
@@ -127,7 +127,12 @@ class ManagerIdController extends BaseController {
             $searchForm = new ProIdentityForm();
             $searchForm->setIndentity($response['identity']);
             $searchForm->setName($response['name']);
-            //$searchForm->setStatus(env('COMMON_STATUS_DELETED'));
+            if (isset($response['orderName'])) {
+                $searchForm->setOrderName($response['orderName']);
+            }
+            if (isset($response['orderIDOnline'])) {
+                $searchForm->setOrderIDOnline($response['orderIDOnline']);
+            }
             Session::put('SESSION_SEARCH_IDENTITY', $searchForm);
             return redirect("/" . env('PREFIX_ADMIN_PORTAL') . "/manager-id");
         } catch (Exception $ex) {
@@ -136,21 +141,57 @@ class ManagerIdController extends BaseController {
             return view('errors.503', compact('error'));
         }
     }
-    
-    public function getClearSearch(){
+
+    public function getClearSearch() {
         try {
             Session::forget('SESSION_SEARCH_IDENTITY');
             return redirect("/" . env('PREFIX_ADMIN_PORTAL') . "/manager-id");
         } catch (Exception $ex) {
-            $this->logs_custom("\nMessage : ".$ex->getMessage(). "\nFile : ".$ex->getFile() . "\nLine : ".$ex->getLine() );
+            $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
             $error = $ex->getMessage();
-            return view('errors.503',  compact('error'));
+            return view('errors.503', compact('error'));
         }
     }
-    
+
+    public function getDataList(Request $data) {
+        try {
+
+            $searchForm = new ProIdentityForm();
+            if (Session::has('SESSION_SEARCH_IDENTITY')) {
+                $searchForm = Session::get('SESSION_SEARCH_IDENTITY');
+            }
+            // set page
+            $page = 1;
+            if (isset($_GET['page'])) {
+                $page = intval($_GET['page']);
+                if ($page == 0)
+                    $page = 1;
+            }
+            $searchForm->setPageSize(env('PAGE_SIZE'));
+            $listObj = $this->identityService->searchListData($searchForm);
+            $countObj = $this->identityService->countList($searchForm);
+            if($searchForm->getOrderIDOnline()!=null){
+                foreach ($listObj as $key=>$value){
+                    if(time()-strtotime($value->last_login)>= env('TIME_OFFLINE')){
+                        //var_dump($listObj[$key]);die();
+                        unset($listObj[$key]);
+                    }
+                }
+            }
+            return view('AdminPortal.ManagerId.data', compact('listObj', 'countObj', 'searchForm', 'page'))->render();
+        } catch (Exception $ex) {
+            $this->logs_custom("\nController ****\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
+            $error = $ex->getMessage();
+            return view('errors.503', compact('error'));
+        }
+    }
+
     public function postDelete(Request $data) {
         DB::beginTransaction();
         try {
+            if($this->adminSession->getRole()!='SUPER_ADMIN'){
+                throw new Exception(trans('exception.PERMISSION_DENIED'));
+            }
             $request = $data->input();
             $hashcode = $request['hashcode'];
             $identityForm = new ProIdentityDetailForm();
@@ -159,24 +200,24 @@ class ManagerIdController extends BaseController {
             $this->identityDetailService->update($identityForm);
             DB::commit();
             $response = array();
-            $response['errCode']=200;
-            $response['errMess']=  trans('common.action_success');
+            $response['errCode'] = 200;
+            $response['errMess'] = trans('common.action_success');
             return json_encode($response);
         } catch (Exception $ex) {
             DB::rollback();
             $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
             $error = $ex->getMessage();
             $response = array();
-            $response['errCode']=100;
-            $response['errMess']=  $error;
+            $response['errCode'] = 100;
+            $response['errMess'] = $error;
             return json_encode($response);
         }
     }
-    
-    public function getEdit($hashcode){
+
+    public function getEdit($hashcode) {
         try {
             $obj = $this->identityService->getDataByHashcode($hashcode);
-            if($obj==null){
+            if ($obj == null) {
                 throw new Exception(trans('exception.DATA_NOT_FOUND'));
             }
             $identityForm = new ProIdentityForm();
@@ -190,7 +231,7 @@ class ManagerIdController extends BaseController {
             return view('errors.503', compact('error'));
         }
     }
-    
+
     public function postEdit(Request $data) {
         DB::beginTransaction();
         try {
@@ -198,7 +239,7 @@ class ManagerIdController extends BaseController {
             $hashcode = $request['hashcode'];
             $name = trim($request['name']);
             $obj = $this->identityService->getDataByHashcode($hashcode);
-            if($obj==null){
+            if ($obj == null) {
                 throw new Exception(trans('exception.DATA_NOT_FOUND'));
             }
             $identityForm = new ProIdentityForm();
@@ -207,7 +248,7 @@ class ManagerIdController extends BaseController {
             $identityForm->setName($name);
             $this->identityService->update($identityForm);
             DB::commit();
-            return redirect("/" . env('PREFIX_ADMIN_PORTAL') . "/manager-id/edit/".$hashcode);
+            return redirect("/" . env('PREFIX_ADMIN_PORTAL') . "/manager-id/edit/" . $hashcode);
         } catch (Exception $ex) {
             DB::rollback();
             $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());

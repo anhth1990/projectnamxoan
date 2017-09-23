@@ -8,10 +8,14 @@
 namespace App\Http\AdminPortal\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Forms\Configurations;
+use Session;
+use App\Http\Forms\UserAdminForm;
 
 class BaseController extends Controller {
+    public $adminSession ;
     public function __construct() {
         $this->configuration = new Configurations();
+        $this->adminSession = Session::get('login_admin_portal');
     }
 }
 

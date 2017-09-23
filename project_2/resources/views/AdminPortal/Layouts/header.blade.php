@@ -35,7 +35,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="javascript:void(0)" onclick="alert('Updating...')" class="btn btn-default btn-flat">{{trans('common.profile')}}</a>
+                  <a href="{{Asset('/'.env('PREFIX_ADMIN_PORTAL').'/user-admin/change-password')}}" class="btn btn-default btn-flat">Thay đổi mật khẩu</a>
                 </div>
                 <div class="pull-right">
                   <a href="{{Asset('/'.env('PREFIX_ADMIN_PORTAL').'/logout')}}" class="btn btn-default btn-flat">{{trans('common.sign_out')}}</a>

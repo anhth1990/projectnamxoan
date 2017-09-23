@@ -20,6 +20,9 @@ class UserAdminForm extends BaseForm{
     private $lastLogin;
     private $email;
     private $mobile;
+    private $rePassword;
+    private $newPassword;
+    private $reNewPassword;
             
     function getUsername() {
         return $this->username;
@@ -101,8 +104,32 @@ class UserAdminForm extends BaseForm{
         $this->mobile = $mobile;
     }
 
+    function getRePassword() {
+        return $this->rePassword;
+    }
 
+    function setRePassword($rePassword) {
+        $this->rePassword = $rePassword;
+    }
     
+    function getNewPassword() {
+        return $this->newPassword;
+    }
+
+    function getReNewPassword() {
+        return $this->reNewPassword;
+    }
+
+    function setNewPassword($newPassword) {
+        $this->newPassword = $newPassword;
+    }
+
+    function setReNewPassword($reNewPassword) {
+        $this->reNewPassword = $reNewPassword;
+    }
+
+
+
 
 }
 

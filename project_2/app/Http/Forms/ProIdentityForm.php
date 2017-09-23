@@ -15,6 +15,8 @@ class ProIdentityForm extends BaseForm {
     private $indentity;
     private $name;
     private $lastLogin;
+    private $orderName;
+    private $orderIDOnline;
             
     function getIndentity() {
         return $this->indentity;
@@ -39,6 +41,23 @@ class ProIdentityForm extends BaseForm {
     function setLastLogin($lastLogin) {
         $this->lastLogin = $lastLogin;
     }
+    
+    function getOrderName() {
+        return $this->orderName;
+    }
+
+    function getOrderIDOnline() {
+        return $this->orderIDOnline;
+    }
+
+    function setOrderName($orderName) {
+        $this->orderName = $orderName;
+    }
+
+    function setOrderIDOnline($orderIDOnline) {
+        $this->orderIDOnline = $orderIDOnline;
+    }
+
 
 
 }
