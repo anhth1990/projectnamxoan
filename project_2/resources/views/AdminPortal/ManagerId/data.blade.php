@@ -1,5 +1,6 @@
 <div class="box-header">
             <h3 class="box-title">Danh sách</h3>
+            <a href="{{Asset('/'.env('PREFIX_ADMIN_PORTAL').'/manager-id/upload-file')}}" class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Tải dữ liệu</a>
         </div><!-- /.box-header -->
         <div class="box-body">
             <table class="table table-bordered">

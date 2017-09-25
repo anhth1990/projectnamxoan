@@ -25,6 +25,7 @@ class ProIdentityService extends BaseService {
         $objDao = new ProIdentityDAO();
         $objDao->identity = $addForm->getIndentity();
         $objDao->last_login = $addForm->getLastLogin();
+        $objDao->name = $addForm->getName();
         if ($addForm->getStatus() != null)
             $objDao->status = $addForm->getStatus();
         else

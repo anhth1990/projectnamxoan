@@ -18,24 +18,27 @@ use App\Http\Services\ProIdentityService;
 use App\Http\Services\ProIdentityDetailService;
 use App\Http\Forms\ProIdentityForm;
 use App\Http\Forms\ProIdentityDetailForm;
+use App\Http\Services\LibService;
 
 class ManagerIdController extends BaseController {
 
     private $apiService;
     private $identityService;
     private $identityDetailService;
+    private $libService;
 
     public function __construct() {
         parent::__construct();
         $this->apiService = new ApiLibService();
         $this->identityService = new ProIdentityService();
         $this->identityDetailService = new ProIdentityDetailService();
+        $this->libService =  new LibService();
     }
 
     public function getData() {
         DB::beginTransaction();
         try {
-            $strData =  $this->apiService->getData();
+            $strData = $this->apiService->getData();
             //$strData = "12345vsec|0*2017-06-28 14:57:10*c:\abc\d\f*md5|0*2017-06-28 14:57:10*c:\abc\d\f";
             //$strData = "12349vsec|";
             if ($strData != null && $strData != "") {
@@ -170,9 +173,9 @@ class ManagerIdController extends BaseController {
             $searchForm->setPageSize(env('PAGE_SIZE'));
             $listObj = $this->identityService->searchListData($searchForm);
             $countObj = $this->identityService->countList($searchForm);
-            if($searchForm->getOrderIDOnline()!=null){
-                foreach ($listObj as $key=>$value){
-                    if(time()-strtotime($value->last_login)>= env('TIME_OFFLINE')){
+            if ($searchForm->getOrderIDOnline() != null) {
+                foreach ($listObj as $key => $value) {
+                    if (time() - strtotime($value->last_login) >= env('TIME_OFFLINE')) {
                         //var_dump($listObj[$key]);die();
                         unset($listObj[$key]);
                     }
@@ -189,7 +192,7 @@ class ManagerIdController extends BaseController {
     public function postDelete(Request $data) {
         DB::beginTransaction();
         try {
-            if($this->adminSession->getRole()!='SUPER_ADMIN'){
+            if ($this->adminSession->getRole() != 'SUPER_ADMIN') {
                 throw new Exception(trans('exception.PERMISSION_DENIED'));
             }
             $request = $data->input();
@@ -216,7 +219,7 @@ class ManagerIdController extends BaseController {
 
     public function getEdit($hashcode) {
         try {
-            if($this->adminSession->getRole()!='SUPER_ADMIN'){
+            if ($this->adminSession->getRole() != 'SUPER_ADMIN') {
                 throw new Exception(trans('exception.PERMISSION_DENIED'));
             }
             $obj = $this->identityService->getDataByHashcode($hashcode);
@@ -252,6 +255,104 @@ class ManagerIdController extends BaseController {
             $this->identityService->update($identityForm);
             DB::commit();
             return redirect("/" . env('PREFIX_ADMIN_PORTAL') . "/manager-id/edit/" . $hashcode);
+        } catch (Exception $ex) {
+            DB::rollback();
+            $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
+            $error = $ex->getMessage();
+            return view('errors.503', compact('error'));
+        }
+    }
+
+    public function getUploadFile() {
+        try {
+            if ($this->adminSession->getRole() != 'SUPER_ADMIN') {
+                throw new Exception(trans('exception.PERMISSION_DENIED'));
+            }
+
+            return view('AdminPortal.ManagerId.upload-file');
+        } catch (Exception $ex) {
+            $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
+            $error = $ex->getMessage();
+            return view('errors.503', compact('error'));
+        }
+    }
+
+    public function postUploadFile(Request $data) {
+        DB::beginTransaction();
+        try {
+            $request = $data->input();
+            $file = $data->file('file');
+            $error = "";
+            if ($file == null) {
+                $error = "Mời chọn tệp";
+            } elseif ($file->getClientOriginalExtension() != 'xlsx') {
+                $error = "Tệp không hợp lệ";
+            }
+            // upload file
+            $path = base_path().$this->libService->uploadFile($file, 'data', 'data_id');
+            $type = $file->getClientOriginalExtension();
+            $arrayData = null;
+            switch ($type) {
+                case "xlsx":
+                    // include PHP Excel
+                    include base_path().'/app/Http/Services/PHPExcel/PHPExcel/IOFactory.php';
+                    try {
+                        $inputFileType = \PHPExcel_IOFactory::identify($path);
+                        $objReader = \PHPExcel_IOFactory::createReader($inputFileType);
+                        $objPHPExcel = $objReader->load($path);
+                    } catch(Exception $e) {
+                        die('Lỗi không thể đọc file "'.pathinfo($path,PATHINFO_BASENAME).'": '.$e->getMessage());
+                    }
+                    //  Lấy thông tin cơ bản của file excel
+
+                    // Lấy sheet hiện tại
+                    $sheet = $objPHPExcel->getSheet(0); 
+
+                    // Lấy tổng số dòng của file, trong trường hợp này là 6 dòng
+                    $highestRow = $sheet->getHighestRow(); 
+
+                    // Lấy tổng số cột của file, trong trường hợp này là 4 dòng
+                    $highestColumn = $sheet->getHighestColumn();
+
+                    // Khai báo mảng $rowData chứa dữ liệu
+
+                    //  Thực hiện việc lặp qua từng dòng của file, để lấy thông tin
+                    for ($row = 1; $row <= $highestRow; $row++){ 
+                        // Lấy dữ liệu từng dòng và đưa vào mảng $rowData
+                        $rowData[] = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row, NULL, TRUE,FALSE);
+                    }
+
+                    //In dữ liệu của mảng
+                    $arrayData = $rowData;
+                    if(!isset($arrayData[0][0][0]) || !isset($arrayData[0][0][1]) || $arrayData[0][0][0]!='Id' || $arrayData[0][0][1]!='Name'){
+                        throw new Exception('NỘI DUNG DỮ LIỆU KHÔNG HỢP LỆ');
+                    }
+                    break;
+                default:
+                    $err = "Tệp không hợp lệ";
+            }
+            if ($error != "") {
+                return view('AdminPortal.ManagerId.upload-file', compact('error'));
+            } else {
+                foreach ($arrayData as $key=>$value){
+                    if($key!=0){
+                        $idForm = new ProIdentityForm();
+                        $idForm->setIndentity(trim($value[0][0]));
+                        if($value[0][1]!=""){
+                            $idForm->setName($value[0][1]);
+                        }
+                        $obj = $this->identityService->getDataByIdenty($idForm->getIndentity());
+                        if($obj==null){
+                            $this->identityService->insert($idForm);
+                        }else{
+                            $idForm->setId($obj->id);
+                            $this->identityService->update($idForm);
+                        }
+                    }
+                }
+                DB::commit();
+                return view('AdminPortal.ManagerId.upload-file-finish');
+            }
         } catch (Exception $ex) {
             DB::rollback();
             $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());

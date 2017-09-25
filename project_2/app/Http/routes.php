@@ -31,6 +31,9 @@ Route::group(array('prefix' => 'portal', 'before' => 'check-login-admin-portal')
     Route::post('/manager-id/edit', '\App\Http\AdminPortal\Controllers\ManagerIdController@postEdit');
     Route::get('/manager-id/deleteSearch', '\App\Http\AdminPortal\Controllers\ManagerIdController@getClearSearch');
     
+    Route::get('/manager-id/upload-file', '\App\Http\AdminPortal\Controllers\ManagerIdController@getUploadFile');
+    Route::post('/manager-id/upload-file', '\App\Http\AdminPortal\Controllers\ManagerIdController@postUploadFile');
+    
     // User Admin
     Route::get('/user-admin', '\App\Http\AdminPortal\Controllers\UserAdminController@getList');
     Route::post('/user-admin', '\App\Http\AdminPortal\Controllers\UserAdminController@postList');
