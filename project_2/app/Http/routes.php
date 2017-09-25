@@ -49,8 +49,7 @@ Route::group(array('prefix' => 'portal', 'before' => 'check-login-admin-portal')
 /*
  * FrontEnd
  */
-//Route::get('/', '\App\Http\FrontEnd\Controllers\IndexController@getIndex');
-Route::get('/', '\App\Http\AdminPortal\Controllers\AuthController@getLogin');
+Route::get('/', '\App\Http\FrontEnd\Controllers\IndexController@getIndex');
 Route::get('/activeCode', '\App\Http\FrontEnd\Controllers\IndexController@getActiveCode');
 
 Route::get('/getLatLong', '\App\Http\Controllers\Controller@getLatLong');

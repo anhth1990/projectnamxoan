@@ -21,7 +21,8 @@ class IndexController extends BaseController {
     }
     
     public function getIndex(){
-        return view('FrontEnd.Index.index');
+        return redirect("/" . env('PREFIX_ADMIN_PORTAL'));
+        //return view('FrontEnd.Index.index');
     }
     
     public function getActiveCode(Request $data){
