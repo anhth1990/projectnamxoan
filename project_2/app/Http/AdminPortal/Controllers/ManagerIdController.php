@@ -216,6 +216,9 @@ class ManagerIdController extends BaseController {
 
     public function getEdit($hashcode) {
         try {
+            if($this->adminSession->getRole()!='SUPER_ADMIN'){
+                throw new Exception(trans('exception.PERMISSION_DENIED'));
+            }
             $obj = $this->identityService->getDataByHashcode($hashcode);
             if ($obj == null) {
                 throw new Exception(trans('exception.DATA_NOT_FOUND'));

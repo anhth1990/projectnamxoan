@@ -40,7 +40,7 @@ class AuthController extends BaseController {
             return view('AdminPortal.Auth.login',  compact('userAdminForm','error'));
         }else{
             $this->userAdminService->login($userAdminForm);
-            return redirect("/" . env('PREFIX_ADMIN_PORTAL'));
+            return redirect("/" . env('PREFIX_ADMIN_PORTAL').'/manager-id');
         }
     }
     
