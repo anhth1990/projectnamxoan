@@ -5,7 +5,7 @@ return [
     "sign_in"=>"Đăng nhập",
     "forgot_password"=>"Quên mệt khẩu",
     "sign_up"=>"Đăng ký",
-    "title_page_admin_portal"=>"Trang quản trị Yupax",
+    "title_page_admin_portal"=>"Admin",
     "title_page_admin_merchant"=>"Trang quản trị ĐVTV",
     "dashboard"=>"Tổng quan",
     "home"=>"Trang chủ",

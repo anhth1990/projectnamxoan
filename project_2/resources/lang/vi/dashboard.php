@@ -15,7 +15,7 @@ return [
     're_pass' => 'Nhập lại mật khẩu',
     'password_success' => 'Đổi mật khẩu thành công.',
     'password_err' => 'Mật khẩu cũ không đúng, vui lòng thử lại.',
-    'title_page' => 'Tổng quan',
+    'title_page' => 'Dashboard',
     '' => '',
     '' => '',
     '' => '',
