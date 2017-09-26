@@ -42,7 +42,7 @@ class ProIdentityDAO extends BaseDAO {
             if($searchForm->getOrderName()!=null){
                 $data = $data->orderBy('name', 'asc');
             }else{
-                $data = $data->orderBy('id', 'desc');
+                $data = $data->orderBy('id', 'asc');
             }
             
             if($searchForm->getPageSize()!=null)

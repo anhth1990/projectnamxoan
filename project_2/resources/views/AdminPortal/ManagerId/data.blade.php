@@ -62,7 +62,7 @@
             </table>
         </div><!-- /.box-body -->
         <div class="box-footer clearfix">
-            @if(isset($listObj) && count($listObj)>0)
+            @if(isset($listObj) && count($listObj)>0 && $searchForm->getOrderIDOnline()==null)
                         @include('pagination.default', ['paginator' => $listObj])
                       @endif
         </div>

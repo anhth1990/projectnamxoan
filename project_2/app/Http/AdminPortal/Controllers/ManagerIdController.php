@@ -174,9 +174,10 @@ class ManagerIdController extends BaseController {
             $listObj = $this->identityService->searchListData($searchForm);
             $countObj = $this->identityService->countList($searchForm);
             if ($searchForm->getOrderIDOnline() != null) {
+                $searchForm->setPageSize(null);
+                $listObj = $this->identityService->searchListData($searchForm);
                 foreach ($listObj as $key => $value) {
                     if (time() - strtotime($value->last_login) >= env('TIME_OFFLINE')) {
-                        //var_dump($listObj[$key]);die();
                         unset($listObj[$key]);
                     }
                 }
