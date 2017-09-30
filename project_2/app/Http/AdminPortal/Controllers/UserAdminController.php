@@ -118,7 +118,7 @@ class UserAdminController extends BaseController {
                 throw new Exception(trans('exception.PERMISSION_DENIED'));
             }
             $addForm = new UserAdminForm();
-            return view('AdminPortal.userAdmin.add', compact('addForm'));
+            return view('AdminPortal.UserAdmin.add', compact('addForm'));
         } catch (Exception $ex) {
             $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
             $error = $ex->getMessage();
@@ -154,10 +154,10 @@ class UserAdminController extends BaseController {
                 $error="Xác nhận mật khẩu không đúng";
             }
             if($error!=""){
-                return view('AdminPortal.userAdmin.add', compact('addForm','error'));
+                return view('AdminPortal.UserAdmin.add', compact('addForm','error'));
             }else{
                 Session::put('SESSION_ADD_USER_ADMIN',$addForm);
-                return view('AdminPortal.userAdmin.add-confirm', compact('addForm'));
+                return view('AdminPortal.UserAdmin.add-confirm', compact('addForm'));
             }
             DB::commit();
         } catch (Exception $ex) {
@@ -177,7 +177,7 @@ class UserAdminController extends BaseController {
                 $this->userAdminService->insert($addForm);
                 Session::forget('SESSION_ADD_USER_ADMIN');
                 DB::commit();
-                return view('AdminPortal.userAdmin.add-finish',  compact('addForm'));
+                return view('AdminPortal.UserAdmin.add-finish',  compact('addForm'));
             }else{
                 return redirect('/' . env('PREFIX_ADMIN_PORTAL').'/user-admin/add');
             }
@@ -207,7 +207,7 @@ class UserAdminController extends BaseController {
             $editForm->setRole($obj->role);
             $editForm->setStatus($obj->status);
             $editForm->setHashcode($obj->hashcode);
-            return view('AdminPortal.userAdmin.edit', compact('editForm'));
+            return view('AdminPortal.UserAdmin.edit', compact('editForm'));
         } catch (Exception $ex) {
             $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
             $error = $ex->getMessage();
@@ -236,10 +236,10 @@ class UserAdminController extends BaseController {
                 $error="Tên đăng nhập đã tồn tại";
             }
             if($error!=""){
-                return view('AdminPortal.userAdmin.edit', compact('editForm','error'));
+                return view('AdminPortal.UserAdmin.edit', compact('editForm','error'));
             }else{
                 Session::put('SESSION_EDIT_USER_ADMIN',$editForm);
-                return view('AdminPortal.userAdmin.edit-confirm', compact('editForm'));
+                return view('AdminPortal.UserAdmin.edit-confirm', compact('editForm'));
             }
             DB::commit();
         } catch (Exception $ex) {
@@ -262,7 +262,7 @@ class UserAdminController extends BaseController {
                 }
                 Session::forget('SESSION_EDIT_USER_ADMIN');
                 DB::commit();
-                return view('AdminPortal.userAdmin.edit-finish',  compact('editForm'));
+                return view('AdminPortal.UserAdmin.edit-finish',  compact('editForm'));
             }else{
                 return redirect('/' . env('PREFIX_ADMIN_PORTAL').'/user-admin');
             }
@@ -324,7 +324,7 @@ class UserAdminController extends BaseController {
             if($obj==null){
                 throw new Exception(trans('exception.DATA_NOT_FOUND'));
             }
-            return view('AdminPortal.userAdmin.change-password');
+            return view('AdminPortal.UserAdmin.change-password');
         } catch (Exception $ex) {
             $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
             $error = $ex->getMessage();
@@ -358,7 +358,7 @@ class UserAdminController extends BaseController {
                 $error="Xác nhận mật khẩu mới không đúng";
             }
             if($error!=""){
-                return view('AdminPortal.userAdmin.change-password', compact('editForm','error'));
+                return view('AdminPortal.UserAdmin.change-password', compact('editForm','error'));
             }else{
                 $editForm->setPassword($editForm->getNewPassword());
                 $obj = $this->userAdminService->updatePassword($editForm);
