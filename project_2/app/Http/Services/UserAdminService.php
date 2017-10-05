@@ -102,7 +102,7 @@ class UserAdminService extends BaseService {
         if($editForm->getHashcode()!=null){
             $obj = $this->userAdminDao->findByHashcode($editForm->getHashcode());
             if($obj!=null){
-                $obj->password = md5($editForm->getPassword());
+                $obj->password = md5($editForm->getNewPassword());
                 return $this->userAdminDao->saveResultId($obj);
             }
             return null;
