@@ -58,7 +58,7 @@ class AuthController extends BaseController {
         $keyStr = "username,password,saveLogin";
         $dataFormat = $this->getInput($data, $keyStr,1);
         $userAdminForm->setUsername($dataFormat["username"]);
-        $userAdminForm->setPassword($dataFormat["password"]);
+        $userAdminForm->setPassword($data["password"]);
         if(isset($dataFormat["saveLogin"]))
             $userAdminForm->setSaveLogin($dataFormat["saveLogin"]);
         return $userAdminForm;
