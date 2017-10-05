@@ -11,6 +11,7 @@ use DB;
 use Exception;
 use App\Http\Forms\ProIdentityForm;
 use App\Http\Models\ProIdentityDetailDAO;
+use App\Http\Models\ProIdentityLogDAO;
 
 class ProIdentityDAO extends BaseDAO {
     
@@ -23,6 +24,11 @@ class ProIdentityDAO extends BaseDAO {
     public function identityDetail()
     {
         return $this->hasMany(new ProIdentityDetailDAO(),'identity_id')->where('status', '!=' , env('COMMON_STATUS_DELETED'));
+    }
+    
+    public function identityLog()
+    {
+        return $this->hasMany(new ProIdentityLogDAO(),'identity_id')->where('status', '!=' , env('COMMON_STATUS_DELETED'));
     }
     
     public function getList(ProIdentityForm $searchForm){

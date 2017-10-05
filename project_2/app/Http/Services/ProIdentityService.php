@@ -45,6 +45,9 @@ class ProIdentityService extends BaseService {
             if($addForm->getLastLogin()!=null){
                 $objDao->last_login = $addForm->getLastLogin();
             }
+            if($addForm->getIp()!=null){
+                $objDao->ip = $addForm->getIp();
+            }
             return $this->identityDao->saveResultId($objDao);
         }
         return null;

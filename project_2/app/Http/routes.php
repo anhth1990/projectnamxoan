@@ -34,6 +34,8 @@ Route::group(array('prefix' => 'portal', 'before' => 'check-login-admin-portal')
     Route::get('/manager-id/upload-file', '\App\Http\AdminPortal\Controllers\ManagerIdController@getUploadFile');
     Route::post('/manager-id/upload-file', '\App\Http\AdminPortal\Controllers\ManagerIdController@postUploadFile');
     
+    Route::get('/manager-id/log/{hashcode}', '\App\Http\AdminPortal\Controllers\ManagerIdController@getLog');
+    
     // User Admin
     Route::get('/user-admin', '\App\Http\AdminPortal\Controllers\UserAdminController@getList');
     Route::post('/user-admin', '\App\Http\AdminPortal\Controllers\UserAdminController@postList');

@@ -17,6 +17,7 @@ class ProIdentityForm extends BaseForm {
     private $lastLogin;
     private $orderName;
     private $orderIDOnline;
+    private $ip;
             
     function getIndentity() {
         return $this->indentity;
@@ -57,7 +58,14 @@ class ProIdentityForm extends BaseForm {
     function setOrderIDOnline($orderIDOnline) {
         $this->orderIDOnline = $orderIDOnline;
     }
+    
+    function getIp() {
+        return $this->ip;
+    }
 
+    function setIp($ip) {
+        $this->ip = $ip;
+    }
 
 
 }

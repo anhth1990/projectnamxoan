@@ -16,8 +16,10 @@ use DB;
 use App\Http\Api\Services\ApiLibService;
 use App\Http\Services\ProIdentityService;
 use App\Http\Services\ProIdentityDetailService;
+use App\Http\Services\ProIdentityLogService;
 use App\Http\Forms\ProIdentityForm;
 use App\Http\Forms\ProIdentityDetailForm;
+use App\Http\Forms\ProIdentityLogForm;
 use App\Http\Services\LibService;
 
 class ManagerIdController extends BaseController {
@@ -26,12 +28,14 @@ class ManagerIdController extends BaseController {
     private $identityService;
     private $identityDetailService;
     private $libService;
+    private $identityLogService;
 
     public function __construct() {
         parent::__construct();
         $this->apiService = new ApiLibService();
         $this->identityService = new ProIdentityService();
         $this->identityDetailService = new ProIdentityDetailService();
+        $this->identityLogService = new ProIdentityLogService();
         $this->libService =  new LibService();
     }
 
@@ -40,7 +44,14 @@ class ManagerIdController extends BaseController {
         try {
             $strData = $this->apiService->getData();
             //$strData = "12345vsec|0*2017-06-28 14:57:10*c:\abc\d\f*md5|0*2017-06-28 14:57:10*c:\abc\d\f";
-            //$strData = "12349vsec|";
+            //$strData = "12348vsec|";
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }
             if ($strData != null && $strData != "") {
                 $arrData = explode("|", $strData);
                 if (isset($arrData[0]) && $arrData[0] != null) {
@@ -55,6 +66,17 @@ class ManagerIdController extends BaseController {
                         $identityObj = $this->identityService->insert($identityForm);
                     } else {
                         //TH đã tồn tại ID
+                        // TH đã tồn tại usb -> Kiểm tra xem usb có đang online
+                        // nếu đang offlinr thì sẽ ghi log ip
+                        if(time() - strtotime($identityObj->last_login) >= env('TIME_OFFLINE')){
+                            $identityForm->setIp($ip);
+                            // ghi log db
+                            $identityLogForm = new ProIdentityLogForm();
+                            $identityLogForm->setIndentityId($identityObj->id);
+                            $identityLogForm->setIp($ip);
+                            $identityLogForm->setLogTime(date("Y-m-d H:i:s"));
+                            $this->identityLogService->insert($identityLogForm);
+                        }   
                         $identityForm->setId($identityObj->id);
                         $identityForm->setLastLogin(date("Y-m-d H:i:s"));
                         $identityObj = $this->identityService->update($identityForm);
@@ -356,6 +378,35 @@ class ManagerIdController extends BaseController {
             }
         } catch (Exception $ex) {
             DB::rollback();
+            $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
+            $error = $ex->getMessage();
+            return view('errors.503', compact('error'));
+        }
+    }
+    public function getLog($hashcode) {
+        try {
+            if ($this->adminSession->getRole() != 'SUPER_ADMIN') {
+                throw new Exception(trans('exception.PERMISSION_DENIED'));
+            }
+            $obj = $this->identityService->getDataByHashcode($hashcode);
+            if ($obj == null) {
+                throw new Exception(trans('exception.DATA_NOT_FOUND'));
+            }
+            // set page
+            $page = 1;
+            if (isset($_GET['page'])) {
+                $page = intval($_GET['page']);
+                if ($page == 0)
+                    $page = 1;
+            }
+            $identityLogForm = new ProIdentityLogForm();
+            $identityLogForm->setIndentityId($obj->id);
+            $identityLogForm->setStatus(env('COMMON_STATUS_ACTIVE'));
+            $identityLogForm->setPageSize(env('PAGE_SIZE'));
+            $listObj = $this->identityLogService->searchListData($identityLogForm);
+            $countObj = $this->identityLogService->countList($identityLogForm);
+            return view('AdminPortal.ManagerId.log', compact('listObj','obj','page','countObj'));
+        } catch (Exception $ex) {
             $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
             $error = $ex->getMessage();
             return view('errors.503', compact('error'));

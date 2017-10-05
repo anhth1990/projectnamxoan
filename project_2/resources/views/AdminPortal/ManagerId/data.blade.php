@@ -26,7 +26,7 @@
                                 @foreach($obj->identityDetail as $objDetail)
                                 <tr>
                                     <td>
-                                        <i class="fa fa-clock-o"></i>&nbsp;&nbsp; {{$objDetail->time}} <br>
+                                        <i class="fa fa-clock-o"></i>&nbsp;&nbsp; <?php echo date_format(date_create($objDetail->time),"d/m/Y H:i:s"); ?> <br>
                                         <i class="fa fa-link"></i>&nbsp;&nbsp; {{$objDetail->url}} <br>
                                         <i class="fa fa-barcode"></i>&nbsp;&nbsp; {{$objDetail->code}} <br>
                                     </td>
@@ -53,7 +53,12 @@
                                 <span class="badge bg-info">Offline</span>
                             @endif
                         </td>
-                        <td style="width: 100px"><a href="{{Asset('/'.env('PREFIX_ADMIN_PORTAL').'/manager-id/edit/'.$obj->hashcode)}}" class="btn btn-xs btn-primary" style="cursor: pointer"><i class='fa fa-edit'></i>Chỉnh sửa</a></td>
+                        <td style="width: 200px">
+                            <a href="{{Asset('/'.env('PREFIX_ADMIN_PORTAL').'/manager-id/edit/'.$obj->hashcode)}}" class="btn btn-xs btn-primary" style="cursor: pointer"><i class='fa fa-edit'></i>Chỉnh sửa</a>
+                            @if($obj->ip!=null)
+                            <a href="{{Asset('/'.env('PREFIX_ADMIN_PORTAL').'/manager-id/log/'.$obj->hashcode)}}" class="btn btn-xs btn-primary" style="cursor: pointer"><i class='fa fa-link'></i>{{$obj->ip}}</a>
+                            @endif
+                        </td>
                     </tr>
                     @endforeach
                     @endif

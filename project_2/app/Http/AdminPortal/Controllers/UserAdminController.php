@@ -31,6 +31,9 @@ class UserAdminController extends BaseController {
 
     public function getList() {
         try {
+            if($this->adminSession->getRole()!='SUPER_ADMIN'){
+                throw new Exception(trans('exception.PERMISSION_DENIED'));
+            }
             $searchForm = new UserAdminForm();
             if (Session::has('SESSION_SEARCH_USERADMIN')) {
                 $searchForm = Session::get('SESSION_SEARCH_USERADMIN');
@@ -376,5 +379,6 @@ class UserAdminController extends BaseController {
             return view('errors.503', compact('error'));
         }
     }
+    
 
 }
