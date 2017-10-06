@@ -29,6 +29,17 @@ class ProIdentityLogService extends BaseService {
         return $this->identityLogDao->saveResultId($objDao);
     }
     
+    public function update(ProIdentityLogForm $addForm) {
+        if ($addForm->getHashcode() != null) {
+            $objDao = $this->identityLogDao->findByHashcode($addForm->getHashcode());
+            if($addForm->getStatus()!=null){
+                $objDao->status = $addForm->getStatus();
+            }
+            return $this->identityLogDao->saveResultId($objDao);
+        }
+        return null;
+    }
+    
     public function searchListData(ProIdentityLogForm $searchForm) {
         return $this->identityLogDao->getList($searchForm);
     }

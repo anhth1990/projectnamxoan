@@ -412,5 +412,63 @@ class ManagerIdController extends BaseController {
             return view('errors.503', compact('error'));
         }
     }
+    
+    public function postLogDelete(Request $data) {
+        DB::beginTransaction();
+        try {
+            if ($this->adminSession->getRole() != 'SUPER_ADMIN') {
+                throw new Exception(trans('exception.PERMISSION_DENIED'));
+            }
+            $request = $data->input();
+            $hashcode = $request['hashcode'];
+            $identityLogForm = new ProIdentityLogForm();
+            $identityLogForm->setHashcode($hashcode);
+            $identityLogForm->setStatus(env('COMMON_STATUS_DELETED'));
+            $this->identityLogService->update($identityLogForm);
+            DB::commit();
+            $response = array();
+            $response['errCode'] = 200;
+            $response['errMess'] = trans('common.action_success');
+            return json_encode($response);
+        } catch (Exception $ex) {
+            DB::rollback();
+            $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
+            $error = $ex->getMessage();
+            $response = array();
+            $response['errCode'] = 100;
+            $response['errMess'] = $error;
+            return json_encode($response);
+        }
+    }
+    
+    public function postLogDeleteMulti(Request $data) {
+        DB::beginTransaction();
+        try {
+            if ($this->adminSession->getRole() != 'SUPER_ADMIN') {
+                throw new Exception(trans('exception.PERMISSION_DENIED'));
+            }
+            $request = $data->input();
+            $listHashcode = explode(',', $request['myCheckboxes']);
+            foreach ($listHashcode as $value){
+                $identityLogForm = new ProIdentityLogForm();
+                $identityLogForm->setHashcode($value);
+                $identityLogForm->setStatus(env('COMMON_STATUS_DELETED'));
+                $this->identityLogService->update($identityLogForm);
+            }
+            DB::commit();
+            $response = array();
+            $response['errCode'] = 200;
+            $response['errMess'] = trans('common.action_success');
+            return json_encode($response);
+        } catch (Exception $ex) {
+            DB::rollback();
+            $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
+            $error = $ex->getMessage();
+            $response = array();
+            $response['errCode'] = 100;
+            $response['errMess'] = $error;
+            return json_encode($response);
+        }
+    }
 
 }
