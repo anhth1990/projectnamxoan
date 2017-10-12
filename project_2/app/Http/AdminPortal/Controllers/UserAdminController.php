@@ -296,7 +296,7 @@ class UserAdminController extends BaseController {
             }else{
                 $editForm = new UserAdminForm();
                 $editForm->setHashcode($hashcode);
-                $editForm->setPassword('123456a');
+                $editForm->setNewPassword('123456a');
                 $obj = $this->userAdminService->updatePassword($editForm);
                 if($obj!=null){
                     $response['errCode'] = 200;
