@@ -470,5 +470,36 @@ class ManagerIdController extends BaseController {
             return json_encode($response);
         }
     }
+    
+    public function postDeleteAll(Request $data){
+        DB::beginTransaction();
+        try {
+            if ($this->adminSession->getRole() != 'SUPER_ADMIN') {
+                throw new Exception(trans('exception.PERMISSION_DENIED'));
+            }
+            $request = $data->input();
+            $searchForm = new ProIdentityDetailForm();
+            $listIdentityDetail = $this->identityDetailService->searchListData($searchForm);
+            foreach ($listIdentityDetail as $key=>$value){
+                $identityForm = new ProIdentityDetailForm();
+                $identityForm->setHashcode($value->hashcode);
+                $identityForm->setStatus(env('COMMON_STATUS_DELETED'));
+                $this->identityDetailService->update($identityForm);
+            }
+            DB::commit();
+            $response = array();
+            $response['errCode'] = 200;
+            $response['errMess'] = trans('common.action_success');
+            return json_encode($response);
+        } catch (Exception $ex) {
+            DB::rollback();
+            $this->logs_custom("\nMessage : " . $ex->getMessage() . "\nFile : " . $ex->getFile() . "\nLine : " . $ex->getLine());
+            $error = $ex->getMessage();
+            $response = array();
+            $response['errCode'] = 100;
+            $response['errMess'] = $error;
+            return json_encode($response);
+        }
+    }
 
 }

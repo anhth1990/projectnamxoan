@@ -42,8 +42,8 @@ class ProIdentityDetailService extends BaseService {
         return null;
     }
    
-    public function searchListData(NewsForm $searchForm){
-        return $this->newsDao->getList($searchForm);
+    public function searchListData(ProIdentityDetailForm $searchForm){
+        return $this->identityDetailDao->getList($searchForm);
     }
     
     public function countList(NewsForm $searchForm){

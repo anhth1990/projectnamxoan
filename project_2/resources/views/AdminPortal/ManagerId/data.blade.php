@@ -1,6 +1,8 @@
 <div class="box-header">
             <h3 class="box-title">Danh sách</h3>
+            <a href="javascript::(0)" class="btn btn-sm btn-danger pull-right" style="margin-left: 10px" onclick="deleteInfo()" ><i class="fa fa-trash"></i> Xóa thông tin</a> 
             <a href="{{Asset('/'.env('PREFIX_ADMIN_PORTAL').'/manager-id/upload-file')}}" class="btn btn-sm btn-primary pull-right"><i class="fa fa-plus"></i> Tải dữ liệu</a>
+            
         </div><!-- /.box-header -->
         <div class="box-body">
             <table class="table table-bordered">

@@ -152,6 +152,28 @@
                 }
             });
         }
+        
+    }
+    
+    function deleteInfo(){
+        $conf = confirm('Bạn có tiếp tục xóa hết phần thông tin ?');
+        if($conf){
+            $.ajax({
+                type: "POST",
+                url: "{{Asset('/stripe/manager-id/delete-all')}}",
+                cache: false,
+                success: function(data)
+                {
+                    $response = jQuery.parseJSON(data);
+                    if($response.errCode==200){
+                        location.reload();
+                    }else{
+                        alert($response.errMess);
+                    }
+
+                }
+            });
+        }
     }
 </script>
 @stop

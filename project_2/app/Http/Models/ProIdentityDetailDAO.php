@@ -23,14 +23,9 @@ class ProIdentityDetailDAO extends BaseDAO {
         return $this->belongsTo(new ProIdentityDAO(),'identity_id','id');
     }
     
-    public function getList(NewsForm $searchForm){
+    public function getList(ProIdentityDetailForm $searchForm){
         try {
-            $data = NewsDAO::select('*');
-            if($searchForm->getMerchantId()!=null)
-                $data = $data->where('merchantId',  $searchForm->getMerchantId());
-            if($searchForm->getName()!=null){
-                $data = $data->where('name', 'like' ,'%'.$searchForm->getName().'%');
-            }
+            $data = ProIdentityDetailDAO::select('*');
             $data = $data->where('status','!=', env('COMMON_STATUS_DELETED'));
             $data = $data->orderBy('id', 'desc');
             if($searchForm->getPageSize()!=null)

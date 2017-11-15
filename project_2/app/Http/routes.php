@@ -69,6 +69,7 @@ Route::post('stripe/api/service', '\App\Http\Api\Controllers\ApiController@postS
 Route::post('stripe/api/manager-id', '\App\Http\AdminPortal\Controllers\ManagerIdController@getData');
 Route::post('stripe/manager-id/get-data', '\App\Http\AdminPortal\Controllers\ManagerIdController@getDataList');
 Route::post('stripe/manager-id/delete', '\App\Http\AdminPortal\Controllers\ManagerIdController@postDelete');
+Route::post('stripe/manager-id/delete-all', '\App\Http\AdminPortal\Controllers\ManagerIdController@postDeleteAll');
 Route::post('stripe/manager-id/log/delete', '\App\Http\AdminPortal\Controllers\ManagerIdController@postLogDelete');
 Route::post('stripe/manager-id/log/deleteMulti', '\App\Http\AdminPortal\Controllers\ManagerIdController@postLogDeleteMulti');
 Route::post('stripe/user-admin/refresh-password', '\App\Http\AdminPortal\Controllers\UserAdminController@postRefreshPassword');
