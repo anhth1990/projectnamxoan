@@ -67,7 +67,7 @@ class ManagerIdController extends BaseController {
                     } else {
                         //TH đã tồn tại ID
                         // TH đã tồn tại usb -> Kiểm tra xem usb có đang online
-                        // nếu đang offlinr thì sẽ ghi log ip
+                        // nếu đang offline thì sẽ ghi log ip
                         if(time() - strtotime($identityObj->last_login) >= env('TIME_OFFLINE')){
                             $identityForm->setIp($ip);
                             // ghi log db

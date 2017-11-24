@@ -16,7 +16,7 @@ class ApiLibService {
     }
 
     public function getData() {
-        $DOMAIN = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'];
+        //$DOMAIN = $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'];
         $headerInfo = $this->getHeaderInfo();
         $user_agent = $_SERVER['HTTP_USER_AGENT'];
         $rawData = file_get_contents("php://input");

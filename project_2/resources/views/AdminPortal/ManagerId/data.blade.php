@@ -28,7 +28,7 @@
                                 @foreach($obj->identityDetail as $objDetail)
                                 <tr>
                                     <td>
-                                        <i class="fa fa-clock-o"></i>&nbsp;&nbsp; <?php echo date_format(date_create($objDetail->time),"d/m/Y H:i:s"); ?> <br>
+                                        <i class="fa fa-clock-o"></i>&nbsp;&nbsp; <?php echo $objDetail->time; ?> <br>
                                         <i class="fa fa-link"></i>&nbsp;&nbsp; {{$objDetail->url}} <br>
                                         <i class="fa fa-barcode"></i>&nbsp;&nbsp; {{$objDetail->code}} <br>
                                     </td>
